@@ -21,7 +21,7 @@ class DenseLayer : public Layer
         float sigmoid(float a);
         float tan_h(float a);
         vector<vector<float>> deltaweight;
-        float eta = 0.01; float alpha = 0.1;
+        float eta = 0.1; float alpha = 0.1;
 };
 
 DenseLayer::DenseLayer(int numNeurons, int numNeuronsNextLayer)
@@ -37,12 +37,6 @@ DenseLayer::DenseLayer(int numNeurons, int numNeuronsNextLayer)
         }
     }
 }
-
-float DenseLayer::tan_h(float a)
-{
-    return tanh(a);
-}
-
 float DenseLayer::sigmoid(float a)
 {
     return 1.0/float(1+exp(-a));
@@ -52,7 +46,7 @@ vector<float> DenseLayer::activationFunction(vector<float> &a)
 {
     vector<float> c;
     for(int i=0;i<a.size();++i)
-        c.push_back(sigmoid(a[i]));
+        c.push_back(tanh(a[i]));
 
     return c;
 }
@@ -61,7 +55,7 @@ vector<float> DenseLayer::activationFunctionDerivative(vector<float> &b)
 {
     vector<float> c;
     for(int i=0;i<b.size();++i)
-        c.push_back(b[i]*(1-b[i]));
+        c.push_back(1-pow(b[i],2));
 
     return c;
 }
