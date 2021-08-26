@@ -31,15 +31,30 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
     {
         c.push_back(vector<T>());
         for(int j=0;j<b[0].size();++j)
-            c.back().push_back(0);
+            c.back().push_back(0.0f);
     }
+    for(int i=0;i<b.size();++i)
+    {
+        for(int j=0;j<b[0].size();++j)
+            cout << a[i][j] << " ";
+        cout << std::endl;
+    }
+    cout << std::endl;
+    for(int i=0;i<b.size();++i)
+    {
+        for(int j=0;j<b[0].size();++j)
+            cout << b[i][j] << " ";
+        cout << std::endl;
+    }
+    cout << std::endl;
+
     try
     {
         queue q(gpu_selector{}, dpc_common::exception_handler);
-        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << endl;
-        buffer C{c};
-        buffer A{a};
-        buffer B{b};
+        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
+        buffer C{c,{property::buffer::use_host_ptr()}};
+        buffer A{a,{property::buffer::use_host_ptr()}};
+        buffer B{b,{property::buffer::use_host_ptr()}};
        
         q.submit([&](auto &h){
                 accessor A1(A, h, read_only);
@@ -47,21 +62,16 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
                 accessor C1(C, h, write_only);
 
                 h.parallel_for(range(b.size(),b[0].size()),[=](auto index){
-                        C1[index] = A1[index] + B1[index];
+                        C1[index[0]][index[1]] = A1[index[0]][index[1]] + B1[index[0]][index[1]];
                         });
                 });
+
     }
     catch (sycl::exception const &e) {
-        cout << "An exception is caught while multiplying matrices.\n";
+        cout << "An exception is caught while adding matrices.\n";
         terminate();
     }
 
-    for(int i = 0;i<a.size();++i)
-    {
-        c.push_back(vector<T>());
-        for(int j=0;j<a[0].size();++j)
-            c.back().push_back(a[i][j]+b[i][j]);
-    }
     return c;
 }
 
