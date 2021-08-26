@@ -2,8 +2,13 @@
 #include<iostream>
 #include<vector>
 #include<cassert>
+#include <CL/sycl.hpp>
+#include <limits>
+#include "dpc_common.hpp"
 
 using namespace std;
+using namespace sycl;
+
 class util
 {
     public:
@@ -22,6 +27,35 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
 
     assert(a.size()==b.size());
     assert(a[0].size()==b[0].size());
+    for(int i=0;i<b.size();++i)
+    {
+        c.push_back(vector<T>());
+        for(int j=0;j<b[0].size();++j)
+            c.back().push_back(0);
+    }
+    try
+    {
+        queue q(gpu_selector{}, dpc_common::exception_handler);
+        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << endl;
+        buffer C{c};
+        buffer A{a};
+        buffer B{b};
+       
+        q.submit([&](auto &h){
+                accessor A1(A, h, read_only);
+                accessor B1(B, h, read_only);
+                accessor C1(C, h, write_only);
+
+                h.parallel_for(range(b.size(),b[0].size()),[=](auto index){
+                        C1[index] = A1[index] + B1[index];
+                        });
+                });
+    }
+    catch (sycl::exception const &e) {
+        cout << "An exception is caught while multiplying matrices.\n";
+        terminate();
+    }
+
     for(int i = 0;i<a.size();++i)
     {
         c.push_back(vector<T>());
