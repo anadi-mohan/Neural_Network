@@ -33,28 +33,14 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
         for(int j=0;j<b[0].size();++j)
             c.back().push_back(0.0f);
     }
-    for(int i=0;i<b.size();++i)
-    {
-        for(int j=0;j<b[0].size();++j)
-            cout << a[i][j] << " ";
-        cout << std::endl;
-    }
-    cout << std::endl;
-    for(int i=0;i<b.size();++i)
-    {
-        for(int j=0;j<b[0].size();++j)
-            cout << b[i][j] << " ";
-        cout << std::endl;
-    }
-    cout << std::endl;
 
     try
     {
-        queue q(gpu_selector{}, dpc_common::exception_handler);
-        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
-        buffer C{c,{property::buffer::use_host_ptr()}};
-        buffer A{a,{property::buffer::use_host_ptr()}};
-        buffer B{b,{property::buffer::use_host_ptr()}};
+        queue q(cpu_selector{}, dpc_common::exception_handler);
+        cout << "CPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
+        buffer C{c};
+        buffer A{a};
+        buffer B{b};
        
         q.submit([&](auto &h){
                 accessor A1(A, h, read_only);
