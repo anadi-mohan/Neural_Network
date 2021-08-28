@@ -31,27 +31,30 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
     {
         c.push_back(vector<T>());
         for(int j=0;j<b[0].size();++j)
-            c.back().push_back(0.0f);
+            c.back().push_back(1.0f);
     }
 
     try
     {
-        queue q(cpu_selector{}, dpc_common::exception_handler);
-        cout << "CPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
-        buffer C{c};
-        buffer A{a};
-        buffer B{b};
-       
-        q.submit([&](auto &h){
-                accessor A1(A, h, read_only);
-                accessor B1(B, h, read_only);
-                accessor C1(C, h, write_only);
-
-                h.parallel_for(range(b.size(),b[0].size()),[=](auto index){
-                        C1[index[0]][index[1]] = A1[index[0]][index[1]] + B1[index[0]][index[1]];
-                        });
-                });
-
+        queue q(gpu_selector{}, dpc_common::exception_handler);
+        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
+        for(int i=0;i<a.size();++i)
+        {
+            buffer C{c[i]};
+            buffer A{a[i]};
+            buffer B{b[i]};
+    
+           
+            q.submit([&](auto &h){
+                    accessor A1(A, h, read_only);
+                    accessor B1(B, h, read_only);
+                    accessor C1(C, h, write_only);
+    
+                    h.parallel_for(range(b[0].size()),[=](auto index){
+                            C1[index] = A1[index] + B1[index];
+                            });
+                    });
+        }
     }
     catch (sycl::exception const &e) {
         cout << "An exception is caught while adding matrices.\n";
@@ -67,6 +70,9 @@ vector<T> util::innerProduct(vector<vector<T>> &a, vector<T> &b)
     vector<T> c;
     
     assert(a[0].size()==b.size());
+
+    for(int i=0;i<a[0].size();++i)
+    try
     for(int i=0;i<a.size();++i)
     {
         T sum = 0;

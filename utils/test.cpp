@@ -5,8 +5,8 @@
 
 using namespace std;
 
-constexpr int M=12;
-constexpr int N=10;
+constexpr int M=40;
+constexpr int N=40;
 constexpr int P=10;
 
 int main()
@@ -19,13 +19,13 @@ int main()
     {
         A.push_back(vector<float>());
         for(int j=0;j<N;++j) 
-            A.back().push_back(1.0f);
+            A.back().push_back(5.0f);
     }
     for(int i=0;i<M;++i)
     {
         B.push_back(vector<float>());
         for(int j=0;j<N;++j)
-            B.back().push_back(1.0f);
+            B.back().push_back(10.0f);
     }
     C = util::add(A, B);
     /*C.assign(C.begin(),C.end()-1);*/
