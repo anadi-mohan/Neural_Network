@@ -23,7 +23,7 @@ int main()
     vector<float> yd;
     
     int trainingPass = 0;
-    while(trainingPass!=2000)
+    while(trainingPass!=20000)
     {
         ++trainingPass;
         cout << endl << "EPOCH " << trainingPass;
