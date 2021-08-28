@@ -73,25 +73,32 @@ vector<T> util::innerProduct(vector<vector<T>> &a, vector<T> &b)
     for(int i=0;i<a.size();++i)
         c.push_back(0.0f);
 
+    vector<vector<T>> temp;
+    for(int i=0;i<a[0].size();++i)
+    {
+        temp.push_back(vector<T>());
+        for(int j=0;j<a.size();++j)
+            temp.back().push_back(a[j][i]);
+    }
+
     try
     {
         queue q(gpu_selector{}, dpc_common::exception_handler);
-        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
 
         buffer B{b};
         buffer C{c};
-        for(int i=0;i<a.size();++i)
-        {
-            buffer A{a[i]};
-// U havent normalized it yet!!
 
+        for(int i=0;i<a[0].size();++i)
+        {
+            buffer A{temp[i]};
             q.submit([&](auto &h){
                     accessor A1(A, h, read_only);
                     accessor B1(B, h, read_only);
-                    accessor C1(C, h, read_only);
-
-                    h.parallel_for(range(a[0].size()), [=](auto index){
-                            C1[i] += A1[index]*B1[index];
+                    accessor C1(C, h, write_only);
+                    int width = b.size();
+    
+                    h.parallel_for(range(a.size()), [=](auto index){
+                            C1[index] +=(A1[index]*B1[i])/width;
                             });
                     });
             host_accessor C1(C);
@@ -142,7 +149,7 @@ vector<vector<T>> util::innerProduct(vector<T> &a, vector<T> &b)
         }
     }
     catch (sycl::exception const &e) {
-        cout << "An exception is caught while adding matrices.\n";
+        cout << "An exception is caught while inner Product of matrices.\n";
         terminate();
     }
 
@@ -157,12 +164,35 @@ vector<T> util::innerProduct(vector<T> &a, vector<vector<T>> &b)
     
     assert(a.size()==b.size());
     for(int i=0;i<b[0].size();++i)
+        c.push_back(0.0f);
+    try
     {
-         T sum=0;
-         for(int j=0;j<b.size();++j)
-             sum += a[j]*b[j][i];
-         c.push_back(sum/b.size());
+        queue q(gpu_selector{}, dpc_common::exception_handler);
+        cout << "GPU device: " << q.get_device().get_info<info::device::name>() << "\n";
+        buffer A{a};
+        buffer C{c};
+
+        for(int i=0;i<b.size();++i)
+        {
+            buffer B{b[i]};
+            
+            q.submit([&](auto &h){
+                    accessor A1(A, h, read_only);
+                    accessor B1(B, h, read_only);
+                    accessor C1(C, h, write_only);
+                    int width = b[0].size();
+
+                    h.parallel_for(range(b[0].size()), [=](auto index){
+                            C1[index] += (A1[i]*B1[index])/width;
+                            });
+                    });
+        }
     }
+    catch (sycl::exception const &e) {
+        cout << "An exception is caught while inner Product of matrices.\n";
+        terminate();
+    }
+
     return c;
 }
 
@@ -180,7 +210,6 @@ vector<T> util::hadamardProduct(vector<T> &a, vector<T> &b)
     try
     {
         queue q(gpu_selector{}, dpc_common::exception_handler);
-        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
 
             buffer C{c};
             buffer A{a};
@@ -198,7 +227,7 @@ vector<T> util::hadamardProduct(vector<T> &a, vector<T> &b)
                     });
         }
     catch (sycl::exception const &e) {
-        cout << "An exception is caught while adding matrices.\n";
+        cout << "An exception is caught while Hadamard Product of vectors.\n";
         terminate();
     }
     return c;
@@ -219,7 +248,6 @@ vector<vector<T>> util::product(U n, vector<vector<T>> &a)
     try
     {
         queue q(gpu_selector{}, dpc_common::exception_handler);
-        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << std::endl;
 
         for(int i=0;i<a.size();++i)
         {
@@ -237,7 +265,7 @@ vector<vector<T>> util::product(U n, vector<vector<T>> &a)
         }
     }
     catch (sycl::exception const &e) {
-        cout << "An exception is caught while adding matrices.\n";
+        cout << "An exception is caught while scalar Product matrices.\n";
         terminate();
     }
 

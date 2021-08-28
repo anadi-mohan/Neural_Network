@@ -12,14 +12,14 @@ constexpr int P=10;
 int main()
 {
     vector<float> C;
-    vector<float> A;
+    vector<vector<float>> A;
     vector<float> B;
     
     for(int i=0;i<M;++i)
     {
-        //A.push_back(vector<float>());
-        //for(int j=0;j<N;++j) 
-            A.push_back(5.0f);
+        A.push_back(vector<float>());
+        for(int j=0;j<N;++j) 
+            A.back().push_back(1.0f);
     }
     for(int i=0;i<N;++i)
     {
@@ -27,7 +27,7 @@ int main()
         //for(int j=0;j<N;++j)
             B.push_back(i+1.0f);
     }
-    C = util::hadamardProduct(A,B);
+    C = util::innerProduct(B,A);
     for(int i=0;i<C.size();++i)
     {
         //for(int j=0;j<C[0].size();++j)
