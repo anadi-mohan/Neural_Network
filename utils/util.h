@@ -31,7 +31,7 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
     {
         c.push_back(vector<T>());
         for(int j=0;j<b[0].size();++j)
-            c.back().push_back(1.0f);
+            c.back().push_back(0.0f);
     }
 
     try
@@ -72,16 +72,32 @@ vector<T> util::innerProduct(vector<vector<T>> &a, vector<T> &b)
     assert(a[0].size()==b.size());
 
     for(int i=0;i<a[0].size();++i)
+        c.push_back(0.0f);
     try
-    for(int i=0;i<a.size();++i)
     {
-        T sum = 0;
-        for(int j=0;j<b.size();++j)
+        buffer B{b};
+        buffer C{c};
+        for(int i=0;i<a.size();++i)
         {
-            sum += a[i][j]*b[j];
+            buffer A{a[i]};
+// U havent normalized it yet!!
+
+            q.submit([&](auto &h){
+                    accessor A1(A, h, read_only);
+                    accessor B1(B, h, read_only);
+                    accessor C1(C, h, write_only);
+
+                    h.parallel_for(range(a[0].size()), [=](auto index){
+                            C1[i] = A1[index]*B1[index];
+                            });
+                    });
         }
-        c.push_back(sum/b.size());
     }
+    catch (sycl::exception const &e) {
+        cout << "An exception is caught while adding matrices.\n";
+        terminate();
+    }
+
     return c;
 }
 
