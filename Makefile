@@ -3,7 +3,7 @@ DPCPP_CXXFLAGS = -std=c++17 -g -o
 DPCPP_CXXASM = -std=c++17 -g -S
 DPCPP_LDFLAGS = 
 DPCPP_EXE_NAME = test
-DPCPP_SOURCES = utils/test.cpp
+DPCPP_SOURCES = src/test.cpp
 
 CXX = icpx
 OMP_CXXFLAGS = -fiopenmp -fopenmp-targets=spir64 -D__STRICT_ANSI__ -g -o

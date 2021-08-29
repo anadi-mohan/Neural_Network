@@ -31,7 +31,7 @@ void TrainingData::getTopology(vector<unsigned>& topology)
     cout << label;
     if (this->isEof() || label.compare("topology:") != 0) {
         cout<<"Wrong topology";
-        abort();
+        //abort();
     }
 
     while (!ss.eof()) {

@@ -101,10 +101,6 @@ vector<T> util::innerProduct(vector<vector<T>> &a, vector<T> &b)
                             C1[index] +=(A1[index]*B1[i])/width;
                             });
                     });
-            host_accessor C1(C);
-            for(int j=0;j<a.size();++j)
-                cout <<C1[j] << " ";
-            cout << std::endl;
         }
     }
     catch (sycl::exception const &e) {
@@ -168,7 +164,7 @@ vector<T> util::innerProduct(vector<T> &a, vector<vector<T>> &b)
     try
     {
         queue q(gpu_selector{}, dpc_common::exception_handler);
-        cout << "GPU device: " << q.get_device().get_info<info::device::name>() << "\n";
+
         buffer A{a};
         buffer C{c};
 
