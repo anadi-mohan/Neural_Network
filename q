@@ -21,7 +21,7 @@ else
     # Remove old output files
     rm *.sh.* > /dev/null 2>&1
     # Submit job using qsub
-    qsub_id=`qsub -l walltime=00:20:00 -l nodes=s011-n007:ppn=2 -d . $script`
+    qsub_id=`qsub -l walltime=00:50:00 -l nodes=s011-n007:ppn=2 -d . $script`
     job_id="$(cut -d'.' -f1 <<<"$qsub_id")"
     # Print qstat output
     qstat 
@@ -33,10 +33,10 @@ else
         echo -ne "█"
         ((timeout++))
         # Timeout if no output file generated within 60 seconds
-        if [ $timeout == 180 ]; then
+        if [ $timeout == 300 ]; then
             echo ""
             echo ""
-            echo "TimeOut 180 seconds: Job is still queued for execution, check for output file later ($script.o$job_id)"
+            echo "TimeOut 300 seconds: Job is still queued for execution, check for output file later ($script.o$job_id)"
             echo ""
             break
         fi

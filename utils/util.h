@@ -36,7 +36,7 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
 
     try
     {
-        queue q(gpu_selector{}, dpc_common::exception_handler);
+        queue q(cpu_selector{}, dpc_common::exception_handler);
         for(int i=0;i<a.size();++i)
         {
             buffer C{c[i]};
@@ -83,7 +83,7 @@ vector<T> util::innerProduct(vector<vector<T>> &a, vector<T> &b)
 
     try
     {
-        queue q(gpu_selector{}, dpc_common::exception_handler);
+        queue q(cpu_selector{}, dpc_common::exception_handler);
 
         buffer B{b};
         buffer C{c};
@@ -125,7 +125,7 @@ vector<vector<T>> util::innerProduct(vector<T> &a, vector<T> &b)
 
     try
     {
-        queue q(gpu_selector{}, dpc_common::exception_handler);
+        queue q(cpu_selector{}, dpc_common::exception_handler);
 
         buffer A{a};
         buffer B{b};
@@ -163,7 +163,7 @@ vector<T> util::innerProduct(vector<T> &a, vector<vector<T>> &b)
         c.push_back(0.0f);
     try
     {
-        queue q(gpu_selector{}, dpc_common::exception_handler);
+        queue q(cpu_selector{}, dpc_common::exception_handler);
 
         buffer A{a};
         buffer C{c};
@@ -205,7 +205,7 @@ vector<T> util::hadamardProduct(vector<T> &a, vector<T> &b)
 
     try
     {
-        queue q(gpu_selector{}, dpc_common::exception_handler);
+        queue q(cpu_selector{}, dpc_common::exception_handler);
 
             buffer C{c};
             buffer A{a};
@@ -243,7 +243,7 @@ vector<vector<T>> util::product(U n, vector<vector<T>> &a)
 
     try
     {
-        queue q(gpu_selector{}, dpc_common::exception_handler);
+        queue q(cpu_selector{}, dpc_common::exception_handler);
 
         for(int i=0;i<a.size();++i)
         {
