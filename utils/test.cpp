@@ -5,8 +5,8 @@
 
 using namespace std;
 
-constexpr int M=10;
-constexpr int N=10;
+constexpr int M=12;
+constexpr int N=12;
 constexpr int P=10;
 
 int main()
