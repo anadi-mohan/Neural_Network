@@ -16,7 +16,7 @@ Utilities required to Implement DNNs
 
 A standard mathematical model for Dense Layer should be established so that it
 could be easily be implemented. 
-Some of the standard mathematical tools to implement Dense Layer are :
+Some of the standard mathematical tools to implement Dense-Layer are :
 
 - Addition of Matices
 - Inner-Product of Vector X Matrix
@@ -25,4 +25,5 @@ Some of the standard mathematical tools to implement Dense Layer are :
 - Hadamard Product of Vectors
 - Product of Scalar X Matrix
 
-
+We have used standard **Gradient Descent** method with additional momentum 
+variable to implement the Dense-Layer.
