@@ -3,8 +3,11 @@
 #include<vector>
 #include<cassert>
 #include <limits>
+#include <CL/sycl.hpp>
+#include "dpc_common.hpp"
 
 using namespace std;
+using namespace sycl;
 
 class util
 {
@@ -28,8 +31,34 @@ vector<vector<T>> util::add(vector<vector<T>> &a,vector<vector<T>> &b)
     {
         c.push_back(vector<T>());
         for(int j=0;j<a[0].size();++j)
-            c.back().push_back(a[i][j]+b[i][j]);
+            c.back().push_back(0.0f);
     }
+    
+    try
+    {
+        queue q(gpu_selector{}, dpc_common::exception_handler);
+        cout << "GPU Device: " << q.get_device().get_info<info::device::name>() << "\n";
+        for(int i=0;i<a.size();++i)
+        {
+            buffer a_buf(a[i]);
+            buffer b_buf(b[i]);
+            buffer c_buf(c[i]);
+
+            q.submit([&](auto &h){
+                    accessor A(a_buf,h,read_only);
+                    accessor B(b_buf,h,read_only);
+                    accessor C(c_buf,h,write_only);
+                    h.parallel_for(range(a[0].size()),[=](auto index){
+                            C[index] = A[index]+B[index];
+                            });
+                    });
+        }
+    }
+    catch (sycl::exception const &e) {
+        cout << "An exception is caught while multiplying matrices.\n";
+        terminate();
+    }
+
     return c;
 }
 
