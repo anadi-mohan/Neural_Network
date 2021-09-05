@@ -9,7 +9,8 @@ using namespace std;
 
 int main()
 {
-    TrainingData trainData("/home/u79318/Neural_Network/src/Training.txt");
+    //TrainingData trainData("/home/u79318/Neural_Network/src/Training.txt");
+    TrainingData trainData("./Training.txt");
     vector<unsigned> topology;
     trainData.getTopology(topology);
 
