@@ -3,12 +3,13 @@
 #include<vector>
 #include "createTraining.h"
 #include "DenseLayer.h"
+#include<chrono>
 
 using namespace std;
 
 int main()
 {
-    TrainingData trainData("./Training.txt");
+    TrainingData trainData("/home/u79318/Neural_Network/src/Training.txt");
     vector<unsigned> topology;
     trainData.getTopology(topology);
 
@@ -23,6 +24,7 @@ int main()
     vector<float> yd;
   
     int trainingPass = 0;
+    auto start = chrono::high_resolution_clock::now();
     while(trainingPass!=20000)
     {
         ++trainingPass;
@@ -64,7 +66,7 @@ int main()
         network[0]->updateWeight();
         network[1]->updateWeight();
     }
-
+    auto stop = chrono::high_resolution_clock::now();
     vector<float> Test={1.0,1.0};
     layer->setOutput(Test);
     network[0]->feedforward(layer);
@@ -85,5 +87,7 @@ int main()
     network[0]->feedforward(layer);
     network[1]->feedforward(network[0]);
     cout << "0,1 -> " << network[1]->output[0] << std::endl;
-
+    
+    auto duration = chrono::duration_cast<chrono::microseconds>(stop-start);
+    cout << "Total Time taken: " << duration.count() << std::endl;
 }
