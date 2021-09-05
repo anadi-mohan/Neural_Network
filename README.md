@@ -1,4 +1,5 @@
-= Modularity and Reusability of Deep Neural Networks =
+Modularity and Reusability of Deep Neural Networks
+==================================================
 
 The method used previously had hard dependecy on the iterative method which
 makes it difficult to plug-in different kinds of layer in the existing dynamic
@@ -10,7 +11,8 @@ better feature abstraction and performance. So to approach the problem in hand
 we set out to modularize the code so that we can easily plugin different layers
 without much change to the higher level implementation of Deep Neural Network.
 
-== Utilities required to Implement DNNs ==
+Utilities required to Implement DNNs
+------------------------------------
 
 A standard mathematical model for Dense Layer should be established so that it
 could be easily be implemented. 
