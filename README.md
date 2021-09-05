@@ -17,11 +17,12 @@ Utilities required to Implement DNNs
 A standard mathematical model for Dense Layer should be established so that it
 could be easily be implemented. 
 Some of the standard mathematical tools to implement Dense Layer are :
-    - Addition of Matices
-    - Inner-Product of Vector X Matrix
-    - Inner-Product of Matrix X Vector
-    - Inner-Product of Vector X Vector
-    - Hadamard Product of Vectors
-    - Product of Scalar X Matrix
+
+- Addition of Matices
+- Inner-Product of Vector X Matrix
+- Inner-Product of Matrix X Vector
+- Inner-Product of Vector X Vector
+- Hadamard Product of Vectors
+- Product of Scalar X Matrix
 
 
