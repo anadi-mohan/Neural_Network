@@ -12,8 +12,8 @@ class DenseLayer : public Layer
     public:
         DenseLayer(int numNeurons,int numNeuronsNextLayer);
         void feedforward(Layer *prevLayer);
-        void calculateLocalGradient(Layer *nextLayer);
-        void calculateOutputGradient(vector<float> &yd);
+        void calculateGradient(Layer *nextLayer);
+        void calculateGradient(vector<float> &yd);
         void updateWeight();
     private:
         vector<float> activationFunction(vector<float> &a);
@@ -68,7 +68,7 @@ void DenseLayer::feedforward(Layer *prevLayer)
     setOutput(activationFunction(c));
 }
 
-void DenseLayer::calculateLocalGradient(Layer *nextLayer)
+void DenseLayer::calculateGradient(Layer *nextLayer)
 {
     auto temp = util::innerProduct(nextLayer->delta , nextLayer->weights);
     temp.assign(temp.begin(),temp.end()-1);
@@ -76,12 +76,12 @@ void DenseLayer::calculateLocalGradient(Layer *nextLayer)
     delta = util::hadamardProduct(temp,c);
 
     vector<vector<float>> new_delta = util::innerProduct(delta,input);
-    vector<vector<float>> current_delta = util::product(eta,new_delta);
-    vector<vector<float>> previous_delta = util::product(alpha,deltaweight);
-    deltaweight = util::add(current_delta,previous_delta);
+    util::product(eta,new_delta);
+    util::product(alpha,deltaweight);
+    util::add(deltaweight,new_delta);
 }
 
-void DenseLayer::calculateOutputGradient(vector<float> &yd)
+void DenseLayer::calculateGradient(vector<float> &yd)
 {
     vector<float> c = activationFunctionDerivative(output);
     delta.clear();
@@ -91,12 +91,12 @@ void DenseLayer::calculateOutputGradient(vector<float> &yd)
     }
     
     vector<vector<float>> new_delta = util::innerProduct(delta,input);
-    vector<vector<float>> current_delta = util::product(eta,new_delta);
-    vector<vector<float>> previous_delta = util::product(alpha,deltaweight);
-    deltaweight = util::add(current_delta,previous_delta);
+    util::product(eta,new_delta);
+    util::product(alpha,deltaweight);
+    util::add(deltaweight,new_delta);
 }
 
 void DenseLayer::updateWeight()
 {
-    weights = util::add(weights,deltaweight);
+    util::add(weights,deltaweight);
 }

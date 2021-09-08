@@ -61,8 +61,8 @@ int main()
         
             cout << "Average error -> " << cost_function << std::endl;
         }
-        network[1]->calculateOutputGradient(yd);
-        network[0]->calculateLocalGradient(network[1]);
+        network[1]->calculateGradient(yd);
+        network[0]->calculateGradient(network[1]);
     
         network[0]->updateWeight();
         network[1]->updateWeight();

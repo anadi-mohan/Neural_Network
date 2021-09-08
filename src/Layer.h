@@ -9,8 +9,8 @@ class Layer
         void setInput(vector<float> Input){input = Input;}
         void setOutput(vector<float> Output){output = Output;}
         virtual void feedforward(Layer *){}
-        virtual void calculateLocalGradient(Layer *){}
-        virtual void calculateOutputGradient(vector<float> &){}
+        virtual void calculateGradient(Layer *){}
+        virtual void calculateGradient(vector<float> &){}
         virtual void updateWeight(){}
         vector<float> input;
         vector<float> output;
