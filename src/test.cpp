@@ -28,7 +28,7 @@ int main()
   
     int trainingPass = 0;
     auto start = chrono::high_resolution_clock::now();
-    while(trainingPass!=20000)
+    while(trainingPass!=2)
     {
         ++trainingPass;
 
@@ -49,7 +49,7 @@ int main()
 
         trainLabel.getTargetOutputs(yd);
 
-        if(trainingPass%100 ==0)
+        if(trainingPass%1 ==0)
         {
             cout << std::endl << "EPOCH " << trainingPass;
             cout << std::endl;
