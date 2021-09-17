@@ -13,8 +13,8 @@ public:
     bool isEof(void) { return m_trainingDataFile.eof(); }
     void getTopology(vector<unsigned>& topology);
 
-    unsigned getNextInputs(vector<float>& inputVals);
-    unsigned getTargetOutputs(vector<float>& targetOutputVals);
+    unsigned getNextInputs(vector<double>& inputVals);
+    unsigned getTargetOutputs(vector<double>& targetOutputVals);
 
 private:
     ifstream m_trainingDataFile;
@@ -47,39 +47,69 @@ TrainingData::TrainingData(const string filename)
     m_trainingDataFile.open(filename.c_str());
 }
 
-unsigned TrainingData::getNextInputs(vector<float>& inputVals)
+unsigned TrainingData::getNextInputs(vector<double>& inputVals)
 {
+//    inputVals.clear();
+//    string line;
+//    getline(m_trainingDataFile, line);
+//    stringstream ss(line);
+//
+//    string label;
+//    ss >> label;
+//    if (label.compare("in:") == 0) {
+//        double oneValue;
+//        while (ss >> oneValue) {
+//            inputVals.push_back(oneValue);
+//        }
+//    }
+//    return inputVals.size();
     inputVals.clear();
     string line;
     getline(m_trainingDataFile, line);
     stringstream ss(line);
-
-    string label;
-    ss >> label;
-    if (label.compare("in:") == 0) {
-        float oneValue;
-        while (ss >> oneValue) {
-            inputVals.push_back(oneValue);
-        }
+    double val;
+    ss>>val;
+    while(val!=-1.0)
+    {
+        inputVals.push_back(val/254.0);
+        getline(m_trainingDataFile, line);
+        stringstream ss(line);
+        ss>>val;
     }
     return inputVals.size();
 }
 
-unsigned TrainingData::getTargetOutputs(vector<float>& targetOutputVals)
+unsigned TrainingData::getTargetOutputs(vector<double>& targetOutputVals)
 {
+//    targetOutputVals.clear();
+//
+//    string line;
+//    getline(m_trainingDataFile, line);
+//    stringstream ss(line);
+//
+//    string label;
+//    ss >> label;
+//    if (label.compare("out:") == 0) {
+//        double oneValue;
+//        while (ss >> oneValue) {
+//            targetOutputVals.push_back(oneValue);
+//        }
+//    }
+//    return targetOutputVals.size();
     targetOutputVals.clear();
-
+    
     string line;
     getline(m_trainingDataFile, line);
     stringstream ss(line);
-
-    string label;
-    ss >> label;
-    if (label.compare("out:") == 0) {
-        float oneValue;
-        while (ss >> oneValue) {
-            targetOutputVals.push_back(oneValue);
-        }
+    double val;
+    ss>>val;
+    //targetOutputVals.push_back(val);
+    int i=0;
+    while(i<10)
+    {
+        if (i==int(val)) targetOutputVals.push_back(1);
+        else targetOutputVals.push_back(0.0);
+        ++i;
     }
     return targetOutputVals.size();
 }
